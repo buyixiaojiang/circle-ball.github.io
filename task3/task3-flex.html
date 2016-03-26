@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>task3-flex</title>
+	<style type="text/css">
+	/*使用强大的flex布局*/
+		* {
+			margin: 0;
+			padding: 20px;
+		}
+		img {
+			width: 80px;
+			height: 80px;
+			padding: 0;
+		}
+		div {
+			box-sizing: border-box;
+			border: 1px solid #999;
+		}
+		.parent {
+			display: flex;
+			align-items: flex-start;
+			background: #eee;
+		}
+		.left, .right, .center {
+			background: #fff;
+		}
+		.left {
+			display: flex;
+			width: 200px;
+			overflow: hidden;
+			flex-basis:200px;			
+		}
+		.left img {
+			flex-basis: 80px;
+			flex: 0 0 80px;
+		}
+		.left h3 {
+			flex: 1;
+		}
+		.right {
+			width: 120px;
+		}
+		.center {
+			flex: 1;
+			margin: 0 20px;
+
+		}
+	</style>
+</head>
+<body>
+	<div class="parent">
+		<div class="left">
+			<img src="" alt="">
+			<h3 class="team-name">circle_ball</h3>
+		</div>
+		<div class="center">
+			北京时间3月26号04：45，国际足球比赛日葡萄牙坐镇主场与保加利亚展开一场友谊赛。上半场不到10分钟，C罗错失了空门的机会。在保加利亚仅有的几次进攻中，马塞利尼奥便帮助其取得领先。葡萄牙上半场获得了不少破门的良机，但都没能把握住机会。下半场葡萄牙继续猛打猛攻，门将多次作出关键扑救。第66分钟，葡萄牙获得点球，门将扑出了C罗的点球。最终，葡萄牙主场0-1负于保加利亚。葡萄牙的第二场热身赛将是对阵比利时。
+两队最近的一次交手，是在2005年的友谊赛上，当时战成0比0。葡萄牙的绝对核心C罗，最近2场热身赛都没有参加。本赛季C罗的状态依旧很出色，俱乐部代表皇马出场38次，打进了41球，此役，C罗能否取得进球，也是本场比赛的一大看点。此外，C罗目前在葡萄......
+		</div>
+		<div class="right">		
+			<img src="" alt="">
+			<img src="" alt="">
+			<img src="" alt="">
+			<img src="" alt="">
+		</div>
+	</div>
+</body>
+</html>
