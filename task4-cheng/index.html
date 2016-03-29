@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>task4</title>
+	<style type="text/css">
+		/*用absolute+transform布局*/
+		.container {
+			position: fixed;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+		}
+		.parent {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			width: 400px;
+			height: 200px;
+			transform: translate(-50%,-50%);
+			background: #ccc;
+		}
+		.child {
+			position: absolute;
+			width: 50px;
+			height: 50px;
+			background: #fc0;
+		}
+		.child-1 {
+			top: 0;
+			left: 0;
+    		border-bottom-right-radius: 100%;
+		}
+		.child-2 {
+			bottom: 0;
+			right: 0;
+			border-top-left-radius: 100%;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="parent">
+			<div class="child child-1"></div>
+			<div class="child child-2"></div>
+		</div>		
+	</div>
+</body>
+</html>
