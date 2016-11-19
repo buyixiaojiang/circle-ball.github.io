@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>IFE JavaScript Task 01</title>
+  </head>
+<body>
+
+  <h3>污染城市列表</h3>
+  <ul id="aqi-list">
+<!--   
+    <li>第一名：福州（样例），10</li>
+  	<li>第二名：福州（样例），10</li> -->
+  </ul>
+
+<script type="text/javascript">
+
+var aqiData = [
+  ["北京", 90],
+  ["上海", 50],
+  ["福州", 10],
+  ["广州", 50],
+  ["成都", 90],
+  ["西安", 100]
+];
+
+(function () {
+
+  /*
+  在注释下方编写代码
+  遍历读取aqiData中各个城市的数据
+  将空气质量指数大于60的城市显示到aqi-list的列表中
+  */
+
+
+  // Array.prototype.sort为数组进行排序，返回值为正数则表示位置需要调换
+  aqiData.sort(compareValue);
+
+  aqiData = aqiData.filter(filterArray); // 筛选大于60的
+
+  var fragment = document.createDocumentFragment();  // 文档片段
+
+  appendDataToElement(fragment, aqiData); 
+
+  document.getElementById('aqi-list').appendChild(fragment);  // 利用文档片段，只发生一次重排，重绘
+
+
+  // 数组排序,从大到小
+  function compareValue(value1, value2) {
+    return value2[1] - value1[1];
+  }
+
+  // 数组筛选
+  function filterArray(item, index ,array) {
+    return item[1] > 60;
+  }
+
+  // 创建li标签，存放数据，添加到文档片段中
+  function appendDataToElement(elementAppendTo, data) {
+    var i,
+        li
+        length = data.length;
+    for (i = 0; i < length; i++) {
+      li = document.createElement('li');
+      li.innerHTML = '第' + i + '名：' + data[i][0] + ',' + data[i][1];
+      elementAppendTo.appendChild(li);
+    }
+  }
+
+})();
+
+</script>
+</body>
+</html>
