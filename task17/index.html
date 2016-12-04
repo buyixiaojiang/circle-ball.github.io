@@ -1,0 +1,73 @@
+<!DOCTYPE>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>IFE JavaScript Task 17</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            padding: 20px;
+        }
+        li {
+            list-style-type: none;
+        }
+        .aqi-chart-wrap {
+            margin: 20px 0;
+            width: 800px;
+            height: 500px;
+            border: 1px solid #ea6563;
+        }
+        #chart-wrap-list {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            align-items: flex-end;
+            height: 100%;
+            /*margin-left: -2px;*/
+        }
+        .chart-wrap-item {
+            flex: 1;
+            max-width: 200px;
+            /*margin-left: 2px;*/
+        }
+        .chart-wrap-item:nth-child(3n + 0) {
+            background: #5e5e5e;
+            /*height: 80%;*/
+        }
+        .chart-wrap-item:nth-child(3n + 1) {
+            background: #00ff00;
+            /*height: 40%;*/
+        }
+        .chart-wrap-item:nth-child(3n + 2) {
+            background: #0066FF;
+            /*height: 90%;*/
+        }
+    </style>
+</head>
+<body>
+<fieldset id="form-gra-time">
+    <legend>请选择日期粒度：</legend>
+    <label>日<input name="gra-time" value="day" type="radio" checked="checked"></label>
+    <label>周<input name="gra-time" value="week" type="radio"></label>
+    <label>月<input name="gra-time" value="month" type="radio"></label>
+</fieldset>
+
+<fieldset>
+    <legend>请选择查看的城市：</legend>
+    <select id="city-select">
+        <!--<option>北京</option>-->
+    </select>
+</fieldset>
+
+<div class="aqi-chart-wrap">
+    <ul id="chart-wrap-list">
+        <!--<li class="chart-wrap-item" style="height: 80%" title="日期：2016-12-20，空气质量：80"></li>-->
+    </ul>
+</div>
+
+<script src="./index.js"></script>
+</body>
+</html>
