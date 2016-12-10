@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>task18</title>
+    <style>
+        form {
+            height: 40px;
+        }
+        #botton-box {
+            display: inline-block;
+        }
+        li {
+            display: inline-block;
+            margin-left: 10px;
+            list-style: none;
+        }
+        li a {
+            text-decoration: none;
+            color: #000;
+        }
+        span {
+            display: none;
+            color: red;
+        }
+        .tips-error {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <form action="#">
+            <input type="text" id="num">
+            <div id="botton-box">
+                <input id="left-in" data-type="add" data-direction="left" type="button" value="左侧入">
+                <input id="right-in" data-type="add" data-direction="right" type="button" value="右侧入">
+                <input id="left-out" data-direction="left" type="button" value="左侧出">
+                <input id="right-out" data-direction="right" type="button" value="右侧出">
+            </div>
+            <span id="num-tips">请输入正确的数字</span>
+        </form>
+        <ul id="num-list">
+        </ul>
+    </div>
+<script>
+    var doc = document,
+        numInput = doc.getElementById('num'),
+        numList = doc.getElementById('num-list'),
+        tipEle = doc.getElementById('num-tips'),
+        buttonBox = doc.getElementById('botton-box');
+
+    function bindEvents() {
+
+        // remove the error tips when the input get focus
+        numInput.addEventListener('focus', function () {
+            tipEle.classList.remove('tips-error');
+        }, false);
+
+        buttonBox.addEventListener('click', function (event) {
+            operateNum(event);
+        }, false);
+
+        numList.addEventListener('click', function (event) {
+            deleteNum(event);
+        }, false);
+    }
+
+    function operateNum (event) {
+        var target = event.target;
+        if (target.dataset.type === "add") {
+            // add
+            addNum(target);
+        } else {
+            // minus
+            minusNum(target);
+        }
+    }
+
+    // add the num
+    function addNum(target) {
+        // 校验输入
+        var numInput = window.numInput,
+            num = numInput.value;
+        if ( validatorNum(num) ) {
+            var li = doc.createElement('li'),
+                    a = doc.createElement('a');
+            a.innerText = num;
+            a.title = 'delete';
+            a.href = 'javascript:;'
+            li.appendChild(a);
+            if (target.dataset.direction === 'left') {
+                numList.insertBefore(li, numList.childNodes[0]);
+            } else {
+                numList.appendChild(li);
+            }
+            numInput.value = null;
+        } else {
+            tipsError();
+        }
+    }
+
+    // minus the num
+    function minusNum(target) {
+        var numList = window.numList,
+            allLi = numList.childNodes,
+            length = allLi.length;
+        if (!length) {
+            return;
+        }
+        if (target.dataset.direction === 'left') {
+            numList.removeChild(allLi[0]);
+        } else {
+            numList.removeChild( allLi[ length - 1 ] );
+        }
+
+    }
+
+    // validator the num
+    function validatorNum(num) {
+        var reg = /^(-?\d+)(\.\d+)?$/,
+            flag = reg.test(num);
+        return flag;
+    }
+
+    // if the input value in not valid , then give the tips
+    function tipsError() {
+        tipEle.classList.add('tips-error');
+    }
+
+    // delete the num which is pointed
+    function deleteNum(event) {
+        var target = event.target;
+        if (target.tagName.toLowerCase() === 'a') {
+            numList.removeChild(target.parentNode);
+        }
+    }
+
+    function init () {
+        bindEvents();
+    }
+    init();
+</script>
+</body>
+</html>
