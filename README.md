@@ -21,3 +21,5 @@ circle-ball的主页
 * childNodes
 * classList.add classList.remove
 * 外面的函数声明了一个变量a，里面的函数想要复用变量a，不能用var a = a，因为这两个都表示里面函数的布局变量，等号后面的a不是外面函数的变量，js函数有提前声明的原则
+
+## task19
