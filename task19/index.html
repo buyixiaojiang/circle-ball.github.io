@@ -5,8 +5,12 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>task18</title>
+    <title>task19</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
         form {
             height: 40px;
         }
@@ -19,12 +23,12 @@
             margin-left: -5px;
             width: 100%;
             align-items: flex-end;
-            height: 100px;
+            height: 600px;
             font-size: 0;
         }
         li {
             /*display: inline-block;*/
-            flex: 0 1 10px;
+            flex: 1 1 10px;
             margin-left: 5px;
             list-style: none;
             /*height: 300px;*/
@@ -57,7 +61,7 @@
             <input id="left-out" data-direction="left" type="button" value="左侧出">
             <input id="right-out" data-direction="right" type="button" value="右侧出">
         </div>
-        <input id="sort-data" type="button" value="排序">
+        <input id="sort-data" type="button" value="冒泡排序">
         <input id="random-btn" type="button" value="随机">
         <span id="num-tips">请输入10-100之间的整数</span>
     </form>
@@ -109,7 +113,7 @@
         }, false);
 
         randomBtn.addEventListener('click', function (event) {
-            createRandomNum();
+            createRandomNum(numInput.value);
         }, false);
     }
 
@@ -170,13 +174,19 @@
     function appendToList(num, target) {
 
         var li = doc.createElement('li'),
-            a = doc.createElement('a');
-//            a.innerText = num;
-//            a.title = num;
+            a = doc.createElement('a'),
+            numList = window.numList;
+
         a.href = 'javascript:;'
         li.appendChild(a);
-        li.style.height = num + 'px';
+        li.style.height = num + '%';
         li.title = num;
+
+        if (numList.getElementsByTagName('li').length >= 60) {
+            alert('当前元素为60个，不能再添加');
+            return;
+        }
+
         if ( target && target.dataset.direction === 'left') {
             numList.insertBefore(li, numList.childNodes[0]);
         } else {
@@ -197,10 +207,14 @@
             numList.removeChild(target.parentNode);
         }
     }
-var timeInter = 1000;
+
     function sortNum() {
         var lis = numList.getElementsByTagName('li'),
+            changeSum = 0,  // 这两个变量时为了渲染结束后给个提示，alert排序结束
+            changeCount = 0,
+            timeInter = 1000, // 排序渲染的时间间隔
             dataArr  = [];
+
         getNumArr();
         bubbleSort();
 
@@ -221,7 +235,8 @@ var timeInter = 1000;
                     if ( dataArr[j] > dataArr[j + 1] ) {
                         changeHeight(j, j + 1);
                         flag = true;
-//                        sleep(3000);
+                        changeSum++;
+                        /*sleep(3000);*/
                     }
                 }
                 if (!flag) {
@@ -244,16 +259,16 @@ var timeInter = 1000;
                 var aHeight = dataArr[a];
                 var bHeight = dataArr[b];
                 setTimeout(function () {
-//                    debugger;
-
-                    lis[a].style.height = aHeight + 'px';
+                    changeCount++
+                    lis[a].style.height = aHeight + '%';
                     lis[a].title = aHeight;
-                    lis[b].style.height = bHeight + 'px';
+                    lis[b].style.height = bHeight + '%';
                     lis[b].title = bHeight;
-//                    lis[a].style.background = '#eee';
-//                    console.log( getComputedStyle(lis[a], null).height );
-
-//                    debugger;
+                    if (changeCount >= changeSum) {
+                        setTimeout(function () {
+                            alert('排序完成');
+                        }, 500);
+                    }
                 }, timeInter += 2000);
 
             }
@@ -266,6 +281,10 @@ var timeInter = 1000;
 
     function createRandomNum(num) {
         var num = num || 10;
+        if ( num > 60 ) {
+            return;
+        }
+//        num = num > 60 ? 60 : num;
         for (var i = 0; i < num; i++) {
             var randomNum = Math.ceil(10 + Math.random() * 90);
             appendToList(randomNum);
