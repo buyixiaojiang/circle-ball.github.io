@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>task21</title>
+    <style>
+        form {
+            height: 40px;
+        }
+        #txt {
+            vertical-align: middle;
+        }
+        #botton-box {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        li {
+            display: inline-block;
+            margin-left: 10px;
+            list-style: none;
+        }
+        li a {
+            text-decoration: none;
+            color: #000;
+        }
+        .mark-item a {
+            color: red;
+        }
+        span {
+            display: none;
+            color: red;
+        }
+        .tips-error {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <form action="#">
+        <!--<input type="text" id="num">-->
+        <textarea id="txt" rows="3" cols="20"></textarea>
+        <div id="botton-box">
+            <input id="left-in" data-type="add" data-direction="left" type="button" value="左侧入">
+            <input id="right-in" data-type="add" data-direction="right" type="button" value="右侧入">
+            <input id="left-out" data-type="minus" data-direction="left" type="button" value="左侧出">
+            <input id="right-out" data-type="minus" data-direction="right" type="button" value="右侧出">
+            <input type="text" id="search-input">
+            <input type="button" data-type="search" id="search-btn" value="查询">
+        </div>
+        <span id="num-tips">请输入正确的数字</span>
+    </form>
+    <ul id="num-list">
+    </ul>
+</div>
+<script>
+    /*基于任务20，将任务20的代码进行抽象、封装，然后在此基础上实现如图中的两个需求：Tag输入和兴趣爱好输入
+
+
+    如示例图上方，实现一个tag输入框
+    要求遇到用户输入空格，逗号，回车时，都自动把当前输入的内容作为一个tag放在输入框下面。
+    Tag不能有重复的，遇到重复输入的Tag，自动忽视。
+    每个Tag请做trim处理
+    最多允许10个Tag，多于10个时，按照录入的先后顺序，把最前面的删掉
+    当鼠标悬停在tag上时，tag前增加删除二字，点击tag可删除
+
+
+    如示例图下方，实现一个兴趣爱好输入的功能
+    通过一个Textarea进行兴趣爱好的输入，可以通过用回车，逗号（全角半角均可），顿号，空格（全角半角、Tab等均可）等符号作为间隔。
+    当点击“确认兴趣爱好”的按钮时，将textarea中的输入按照你设定的间隔符，拆解成一个个的爱好，显示在textarea下方
+    爱好不能重复，所以在下方呈现前，需要做一个去重
+    每个爱好内容需要做trim处理
+    最多允许10个兴趣爱好，多于10个时，按照录入的先后顺序，把最前面的删掉*/
+    var doc = document,
+        txtInput = doc.getElementById('txt'),
+        inputArr = [], // 输入的字符转换成数组
+        resultArr = [], // 展现出来的文字数组
+        numList = doc.getElementById('num-list'),
+        tipEle = doc.getElementById('num-tips'),
+        buttonBox = doc.getElementById('botton-box');
+
+    function bindEvents() {
+
+        // remove the error tips when the input get focus
+        txtInput.addEventListener('focus', function () {
+            tipEle.classList.remove('tips-error');
+        }, false);
+
+        buttonBox.addEventListener('click', function (event) {
+            operateNum(event);
+        }, false);
+
+        numList.addEventListener('click', function (event) {
+            deleteNum(event);
+        }, false);
+    }
+
+    function operateNum (event) {
+        var target = event.target,
+            type = target.dataset.type;
+        if (type === "add") {
+            // add
+            addNum(target);
+        } else if (type === "minus") {
+            // minus
+            minusNum(target);
+        } else if (type === "search") {
+            // 查询
+            searchTxt(target);
+        }
+    }
+
+    // add the num
+    function addNum(target) {
+        // 校验输入
+        /*var txtInput = window.txtInput,
+            txt = txtInput.value;*/
+        validatorInput();
+        var i,
+            length = inputArr.length;
+            console.log(inputArr);
+            for (i = 0; i < length; i++) {
+                appendToList(inputArr[i], target);
+            }
+
+    }
+    
+    // minus the num
+    function minusNum(target) {
+        var numList = window.numList,
+                allLi = numList.childNodes,
+                length = allLi.length;
+        if (!length) {
+            return;
+        }
+        if (target.dataset.direction === 'left') {
+            resultArr.shift();
+            numList.removeChild(allLi[0]);
+        } else {
+            resultArr.pop();
+            numList.removeChild( allLi[ length - 1 ] );
+        }
+
+    }
+
+    // validator the num
+    function validatorInput() {
+        inputArr = txtInput.value.split(/\r|\n|,|，|、|\s/gm);
+        return inputArr;
+    }
+
+    function appendToList(txt, target) {
+
+        var li = doc.createElement('li'),
+            a = doc.createElement('a'),
+            numList = window.numList;
+
+        a.href = 'javascript:;';
+        a.innerText = txt;
+        li.appendChild(a);
+//        li.style.height = num + '%';
+        li.title = txt;
+
+        if (numList.getElementsByTagName('li').length >= 60) {
+            alert('当前元素为60个，不能再添加');
+            return;
+        }
+
+        if ( target && target.dataset.direction === 'left') {
+            resultArr.unshift(txt);
+            numList.insertBefore(li, numList.childNodes[0]);
+        } else {
+            resultArr.push(txt);
+            numList.appendChild(li);
+        }
+        txtInput.value = null;
+    }
+    
+    // if the input value in not valid , then give the tips
+    function tipsError() {
+        tipEle.classList.add('tips-error');
+    }
+
+    // delete the num which is pointed
+    function deleteNum(event) {
+        var target = event.target;
+        if (target.tagName.toLowerCase() === 'a') {
+            numList.removeChild(target.parentNode);
+        }
+    }
+
+    function searchTxt(target) {
+        var value = document.getElementById('search-input').value,
+            length = resultArr.length,
+            i;
+        clearNumListMark();
+        if (value === '') {
+            return;
+        }
+        for (i = 0; i < length; i++) {
+            if ( resultArr[i].indexOf(value) != -1 ) {
+                markNumList(i);
+            }
+        }
+    }
+
+    /*清除每一项中添加的样式*/
+    function clearNumListMark() {
+        var lis = numList.getElementsByTagName('li'),
+                length = lis.length;
+        for (var i = 0; i < length; i++) {
+            lis[i].classList.remove('mark-item');
+        }
+    }
+
+    function markNumList(index) {
+        var lis = numList.getElementsByTagName('li');
+        lis[index].classList.add('mark-item');
+    }
+
+    function init () {
+        bindEvents();
+    }
+    init();
+</script>
+</body>
+</html>
