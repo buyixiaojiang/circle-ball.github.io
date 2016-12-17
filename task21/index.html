@@ -7,8 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>task21</title>
     <style>
+        /** {
+            margin: 0;
+            padding: 0;
+        }*/
         form {
-            height: 40px;
+            /*height: 40px;*/
         }
         #txt {
             vertical-align: middle;
@@ -29,41 +33,70 @@
         .mark-item a {
             color: red;
         }
-        span {
+        /*span {
             display: none;
             color: red;
-        }
+        }*/
         .tips-error {
             display: block;
+        }
+        .tag-item {
+
+        }
+        .tag-item-link {
+            padding: 5px;
+            color: #fff;
+            background: steelblue;
+        }
+        .tag-item-link:hover {
+            background: #f00;
+        }
+        .tag-item-link:hover .tag-item-del {
+            display: inline-block;
+        }
+        .tag-item-del {
+            display: none;
+        }
+        .intrest-item {
+            padding: 10px;
+            background: coral;
+            color: #fff;
         }
     </style>
 </head>
 <body>
 <div>
     <form action="#">
+        <label for="j-tag-input">Tag:</label>
+        <input type="text" id="j-tag-input">
+        <ul id="j-tag-list">
+            <!--<li class="tag-item">
+                <a href="javascript:;" class="tag-item-link">
+                    <span class="tag-item-del">点击删除</span>
+                    HTML5
+                </a>
+            </li>-->
+        </ul>
         <!--<input type="text" id="num">-->
-        <textarea id="txt" rows="3" cols="20"></textarea>
-        <div id="botton-box">
-            <input id="left-in" data-type="add" data-direction="left" type="button" value="左侧入">
-            <input id="right-in" data-type="add" data-direction="right" type="button" value="右侧入">
-            <input id="left-out" data-type="minus" data-direction="left" type="button" value="左侧出">
-            <input id="right-out" data-type="minus" data-direction="right" type="button" value="右侧出">
-            <input type="text" id="search-input">
-            <input type="button" data-type="search" id="search-btn" value="查询">
-        </div>
-        <span id="num-tips">请输入正确的数字</span>
+        <textarea id="j-intrest-input" rows="3" cols="20"></textarea>
+        <br>
+        <input type="button" value="确认兴趣爱好" id="j-btn-intrest">
+        <ul id="j-intrest-list">
+            <!--<li class="intrest-item">
+                健身
+            </li>-->
+        </ul>
     </form>
-    <ul id="num-list">
-    </ul>
+
 </div>
 <script>
     /*基于任务20，将任务20的代码进行抽象、封装，然后在此基础上实现如图中的两个需求：Tag输入和兴趣爱好输入
 
 
     如示例图上方，实现一个tag输入框
-    要求遇到用户输入空格，逗号，回车时，都自动把当前输入的内容作为一个tag放在输入框下面。
+    要求遇到用户输入空格32，逗号188，回车13时，都自动把当前输入的内容作为一个tag放在输入框下面。
     Tag不能有重复的，遇到重复输入的Tag，自动忽视。
-    每个Tag请做trim处理
+    每个Tag请做trim处理以及逗号处理
     最多允许10个Tag，多于10个时，按照录入的先后顺序，把最前面的删掉
     当鼠标悬停在tag上时，tag前增加删除二字，点击tag可删除
 
@@ -74,157 +107,199 @@
     爱好不能重复，所以在下方呈现前，需要做一个去重
     每个爱好内容需要做trim处理
     最多允许10个兴趣爱好，多于10个时，按照录入的先后顺序，把最前面的删掉*/
-    var doc = document,
-        txtInput = doc.getElementById('txt'),
-        inputArr = [], // 输入的字符转换成数组
-        resultArr = [], // 展现出来的文字数组
-        numList = doc.getElementById('num-list'),
-        tipEle = doc.getElementById('num-tips'),
-        buttonBox = doc.getElementById('botton-box');
 
-    function bindEvents() {
+    var doc = document;
 
-        // remove the error tips when the input get focus
-        txtInput.addEventListener('focus', function () {
-            tipEle.classList.remove('tips-error');
-        }, false);
+    var tagObj = {
+        tagInput: doc.getElementById('j-tag-input'),
+        tagList: doc.getElementById('j-tag-list'),
+        tagArr: [],
+        init: function () {
+            this.bindEvents();
+        },
+        bindEvents: function () {
+            var self = this;
+            self.tagInput.addEventListener('keyup', function (event) {
+                var keyCode = event.keyCode
+                if ( keyCode === 188 || keyCode === 13 || keyCode === 32 ) {
+                    self.keyupCallback(this.value);
+                }
 
-        buttonBox.addEventListener('click', function (event) {
-            operateNum(event);
-        }, false);
+            }, false);
+            self.tagList.addEventListener('click', function () {
+                self.listClickCallback(event);
+            }, false);
+        },
+        keyupCallback: function (value) {
+            var self = this;
+            console.log(value);
+            value = handleValue(value);
+            if (value == '') {
+                return;
+            }
+            compareTagArr(value);
+            self.tagInput.value = null;
+            operaDom();
+            /*
+            * 取出value
+            * value值处理
+            * 判断与之前的是否有重复的
+            * input框的value清空
+            * 操作dom之前,判断li的length,若>=10，则remove第一个，加上最后一个
+            * */
 
-        numList.addEventListener('click', function (event) {
-            deleteNum(event);
-        }, false);
-    }
-
-    function operateNum (event) {
-        var target = event.target,
-            type = target.dataset.type;
-        if (type === "add") {
-            // add
-            addNum(target);
-        } else if (type === "minus") {
-            // minus
-            minusNum(target);
-        } else if (type === "search") {
-            // 查询
-            searchTxt(target);
-        }
-    }
-
-    // add the num
-    function addNum(target) {
-        // 校验输入
-        /*var txtInput = window.txtInput,
-            txt = txtInput.value;*/
-        validatorInput();
-        var i,
-            length = inputArr.length;
-            console.log(inputArr);
-            for (i = 0; i < length; i++) {
-                appendToList(inputArr[i], target);
+            /*
+            * 对值进行处理
+            * */
+            function handleValue(value) {
+                return  value.trim().replace(/[\r\n,]+/, '');
             }
 
-    }
-    
-    // minus the num
-    function minusNum(target) {
-        var numList = window.numList,
-                allLi = numList.childNodes,
-                length = allLi.length;
-        if (!length) {
-            return;
-        }
-        if (target.dataset.direction === 'left') {
-            resultArr.shift();
-            numList.removeChild(allLi[0]);
-        } else {
-            resultArr.pop();
-            numList.removeChild( allLi[ length - 1 ] );
-        }
+            /*
+            * 比较是否与之前的tag重复
+            * */
+            function compareTagArr(value) {
+                console.log(self.tagArr);
+                getTagArr();
+                var tagArr = self.tagArr;
+                var length = self.tagArr.length;
+                var flag = true;
+                for (var i = 0; i < length; i++) {
+                    if (value === tagArr[i]) {
+                        flag = false;
+                        break;
+                    }
+                }
+                if (flag) {
+                    tagArr.push(value);
+                }
+//                console.log(self.tagArr);
+            }
+            function getTagArr() {
+                var tagList = self.tagList;
+                var tagItem = tagList.getElementsByTagName('li');
+                var length = tagItem.length;
+                var tagArr = self.tagArr = [];
+                for (var i = 0; i < length; i++) {
+                    tagArr[i] = tagItem[i].innerText;
+//                    console.log(tagItem[i].innerText)
+                }
+            }
+            /*
+            * 操作dom
+            * 判断tagArr的值是否有增多，如果有，则append
+            * 同时判断现在的是否超过10个，如果是，则删掉最前面那个
+            * */
+            function operaDom() {
+                var tagList = self.tagList;
+                var tagArr = self.tagArr;
+                var tagItems = tagList.getElementsByTagName('li');
+                var liLength = tagItems.length;
+                var tagLength = tagArr.length;
 
-    }
+                // 如果没有重复的
+                if ( liLength < tagLength ) {
 
-    // validator the num
-    function validatorInput() {
-        inputArr = txtInput.value.split(/\r|\n|,|，|、|\s/gm);
-        return inputArr;
-    }
+                    var li = document.createElement('li');
+                    li.classList.add('tag-item');
+                    li.innerHTML = `<a href="javascript:;" class="tag-item-link">
+                            <span class="tag-item-del">点击删除</span>${tagArr[tagLength - 1]}</a>`;
+                    tagList.appendChild(li);
 
-    function appendToList(txt, target) {
 
-        var li = doc.createElement('li'),
-            a = doc.createElement('a'),
-            numList = window.numList;
-
-        a.href = 'javascript:;';
-        a.innerText = txt;
-        li.appendChild(a);
-//        li.style.height = num + '%';
-        li.title = txt;
-
-        if (numList.getElementsByTagName('li').length >= 60) {
-            alert('当前元素为60个，不能再添加');
-            return;
-        }
-
-        if ( target && target.dataset.direction === 'left') {
-            resultArr.unshift(txt);
-            numList.insertBefore(li, numList.childNodes[0]);
-        } else {
-            resultArr.push(txt);
-            numList.appendChild(li);
-        }
-        txtInput.value = null;
-    }
-    
-    // if the input value in not valid , then give the tips
-    function tipsError() {
-        tipEle.classList.add('tips-error');
-    }
-
-    // delete the num which is pointed
-    function deleteNum(event) {
-        var target = event.target;
-        if (target.tagName.toLowerCase() === 'a') {
-            numList.removeChild(target.parentNode);
-        }
-    }
-
-    function searchTxt(target) {
-        var value = document.getElementById('search-input').value,
-            length = resultArr.length,
-            i;
-        clearNumListMark();
-        if (value === '') {
-            return;
-        }
-        for (i = 0; i < length; i++) {
-            if ( resultArr[i].indexOf(value) != -1 ) {
-                markNumList(i);
+                    // 如果超过10个
+                    if(liLength > 9) {
+                        // 删除掉第一个
+                        tagArr.shift();
+                        tagList.removeChild(tagItems[0]);
+                    }
+                    console.log(self.tagArr);
+                }
+            }
+        },
+        listClickCallback: function (event) {
+            console.log(event.target);
+            var self = this;
+            var targetClass = event.target.classList
+            if (targetClass.contains('tag-item-link')) {
+                self.tagList.removeChild(event.target.parentNode);
+            } else if(targetClass.contains('tag-item-del')) {
+                self.tagList.removeChild(event.target.parentNode.parentNode);
             }
         }
     }
+    tagObj.init();
 
-    /*清除每一项中添加的样式*/
-    function clearNumListMark() {
-        var lis = numList.getElementsByTagName('li'),
-                length = lis.length;
-        for (var i = 0; i < length; i++) {
-            lis[i].classList.remove('mark-item');
+    var intrestObj = {
+        intrestInput: doc.getElementById('j-intrest-input'),
+        intrestList: doc.getElementById('j-intrest-list'),
+        intrestBtn: doc.getElementById('j-btn-intrest'),
+        intrestArr: [],
+        init: function () {
+            console.log(this.intrestList);
+            this.bindEvents();
+        },
+        bindEvents: function () {
+            var self = this;
+            self.intrestBtn.addEventListener('click', function () {
+                self.addIntrest();
+            }, false);
+        },
+        addIntrest: function () {
+            var self = this;
+            var newValue = handleValue();
+            doTrim();
+            self.intrestArr = self.intrestArr.concat(newValue);
+            console.log('去重之前');
+            console.log(self.intrestArr);
+            deleteRepeat();
+            operateDom();
+            function handleValue() {
+                var intrestInput = self.intrestInput
+                var value = intrestInput.value;
+                intrestInput.value = null;
+                return value.split(/[\r\n]+/);
+            }
+            function doTrim() {
+                var length = newValue.length;
+                for (var i = length -1; i >= 0; i--) {
+                    newValue[i].trim();
+                    if (newValue[i] == '') {
+                        newValue.splice(i, 1);
+                    }
+                }
+            }
+            function deleteRepeat() {
+                var intrestSet = new Set(self.intrestArr);
+                self.intrestArr = Array.from(intrestSet);
+                console.log("去重之后：");
+                console.log(self.intrestArr);
+            }
+            function operateDom() {
+                var intrestList = self.intrestList;
+                var intrestItems = intrestList.getElementsByTagName('li');
+                var itemLength = intrestItems.length;
+                var intrestArr = self.intrestArr;
+                var intrestArrLength = intrestArr.length;
+                var doc = document;
+                var fragment = doc.createDocumentFragment();
+                var delLength = intrestArrLength - 10;
+                for (var i = itemLength; i < intrestArrLength; i++) {
+                    var li = doc.createElement('li');
+                    li.innerHTML = intrestArr[i];
+                    li.classList.add('intrest-item');
+                    fragment.appendChild(li);
+                }
+                for (i = 0; i < delLength; i++) {
+                    intrestList.removeChild(intrestItems[0]);
+                    intrestArr.shift();
+                }
+                intrestList.appendChild(fragment);
+            }
         }
-    }
+    };
+    intrestObj.init();
 
-    function markNumList(index) {
-        var lis = numList.getElementsByTagName('li');
-        lis[index].classList.add('mark-item');
-    }
-
-    function init () {
-        bindEvents();
-    }
-    init();
 </script>
 </body>
 </html>
