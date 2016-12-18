@@ -37,3 +37,4 @@ circle-ball的主页
 * chilidNodes 可能包含注释节点
 * splice 删除数组指定项并且可插入项
 * 还缺第一次输入超过十个的时候的处理
+* Set Array.from等ES6语法实现数组去重

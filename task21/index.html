@@ -126,10 +126,17 @@
                 }
 
             }, false);
-            self.tagList.addEventListener('click', function () {
+            self.tagList.addEventListener('click', function (event) {
                 self.listClickCallback(event);
             }, false);
         },
+
+        /*
+        * 1.对值进行trim处理
+        * 2.获取最新的tag数组（因为可能存在删除，所以要获取一次）
+        * 3.比较传入的值是否与tag数组里面有重复的
+        * 4.操作dom，先添加，如果超过10个则remove第一个
+        * */
         keyupCallback: function (value) {
             var self = this;
             console.log(value);
@@ -137,16 +144,10 @@
             if (value == '') {
                 return;
             }
+            getTagArr();
             compareTagArr(value);
             self.tagInput.value = null;
             operaDom();
-            /*
-            * 取出value
-            * value值处理
-            * 判断与之前的是否有重复的
-            * input框的value清空
-            * 操作dom之前,判断li的length,若>=10，则remove第一个，加上最后一个
-            * */
 
             /*
             * 对值进行处理
@@ -160,7 +161,6 @@
             * */
             function compareTagArr(value) {
                 console.log(self.tagArr);
-                getTagArr();
                 var tagArr = self.tagArr;
                 var length = self.tagArr.length;
                 var flag = true;
@@ -175,16 +175,29 @@
                 }
 //                console.log(self.tagArr);
             }
+
+            /*
+            * 获取tagArr数组
+            * 因为如果存在删除的情况，则tag数组与实际展现的数组存在差异，需要获取最新数组
+            * */
             function getTagArr() {
                 var tagList = self.tagList;
                 var tagItem = tagList.getElementsByTagName('li');
                 var length = tagItem.length;
-                var tagArr = self.tagArr = [];
+                var tagArr = self.tagArr
+                console.log('获取之前');
+                if(length === tagArr.length) {
+                    console.log('没必要获取最新数组')
+                    return;
+                }
+
+                tagArr = self.tagArr = [];
                 for (var i = 0; i < length; i++) {
                     tagArr[i] = tagItem[i].innerText;
 //                    console.log(tagItem[i].innerText)
                 }
             }
+
             /*
             * 操作dom
             * 判断tagArr的值是否有增多，如果有，则append
@@ -245,6 +258,12 @@
                 self.addIntrest();
             }, false);
         },
+        /*
+        * 1. 对输入的值进行分割字符串，转换成数组
+        * 2. 对值进行trim处理
+        * 3. 去重，利用set和Array.from ES6信语法
+        * 4. 操作dom
+        * */
         addIntrest: function () {
             var self = this;
             var newValue = handleValue();
@@ -290,11 +309,12 @@
                     li.classList.add('intrest-item');
                     fragment.appendChild(li);
                 }
+                intrestList.appendChild(fragment);
                 for (i = 0; i < delLength; i++) {
                     intrestList.removeChild(intrestItems[0]);
                     intrestArr.shift();
                 }
-                intrestList.appendChild(fragment);
+
             }
         }
     };
