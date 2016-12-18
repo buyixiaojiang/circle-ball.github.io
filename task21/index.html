@@ -161,9 +161,9 @@
             * */
             function compareTagArr(value) {
                 console.log(self.tagArr);
-                var tagArr = self.tagArr;
-                var length = self.tagArr.length;
-                var flag = true;
+                var tagArr = self.tagArr,
+                    length = self.tagArr.length,
+                    flag = true;
                 for (var i = 0; i < length; i++) {
                     if (value === tagArr[i]) {
                         flag = false;
@@ -181,10 +181,10 @@
             * 因为如果存在删除的情况，则tag数组与实际展现的数组存在差异，需要获取最新数组
             * */
             function getTagArr() {
-                var tagList = self.tagList;
-                var tagItem = tagList.getElementsByTagName('li');
-                var length = tagItem.length;
-                var tagArr = self.tagArr
+                var tagList = self.tagList,
+                    tagItem = tagList.getElementsByTagName('li'),
+                    length = tagItem.length,
+                    tagArr = self.tagArr;
                 console.log('获取之前');
                 if(length === tagArr.length) {
                     console.log('没必要获取最新数组')
@@ -204,11 +204,11 @@
             * 同时判断现在的是否超过10个，如果是，则删掉最前面那个
             * */
             function operaDom() {
-                var tagList = self.tagList;
-                var tagArr = self.tagArr;
-                var tagItems = tagList.getElementsByTagName('li');
-                var liLength = tagItems.length;
-                var tagLength = tagArr.length;
+                var tagList = self.tagList,
+                    tagArr = self.tagArr,
+                    tagItems = tagList.getElementsByTagName('li'),
+                    liLength = tagItems.length,
+                    tagLength = tagArr.length;
 
                 // 如果没有重复的
                 if ( liLength < tagLength ) {
@@ -232,8 +232,8 @@
         },
         listClickCallback: function (event) {
             console.log(event.target);
-            var self = this;
-            var targetClass = event.target.classList
+            var self = this,
+                targetClass = event.target.classList;
             if (targetClass.contains('tag-item-link')) {
                 self.tagList.removeChild(event.target.parentNode);
             } else if(targetClass.contains('tag-item-del')) {
@@ -265,8 +265,8 @@
         * 4. 操作dom
         * */
         addIntrest: function () {
-            var self = this;
-            var newValue = handleValue();
+            var self = this,
+                newValue = handleValue();
             doTrim();
             self.intrestArr = self.intrestArr.concat(newValue);
             console.log('去重之前');
@@ -274,8 +274,8 @@
             deleteRepeat();
             operateDom();
             function handleValue() {
-                var intrestInput = self.intrestInput
-                var value = intrestInput.value;
+                var intrestInput = self.intrestInput,
+                    value = intrestInput.value;
                 intrestInput.value = null;
                 return value.split(/[\r\n]+/);
             }
@@ -295,14 +295,14 @@
                 console.log(self.intrestArr);
             }
             function operateDom() {
-                var intrestList = self.intrestList;
-                var intrestItems = intrestList.getElementsByTagName('li');
-                var itemLength = intrestItems.length;
-                var intrestArr = self.intrestArr;
-                var intrestArrLength = intrestArr.length;
-                var doc = document;
-                var fragment = doc.createDocumentFragment();
-                var delLength = intrestArrLength - 10;
+                var intrestList = self.intrestList,
+                    intrestItems = intrestList.getElementsByTagName('li'),
+                    itemLength = intrestItems.length,
+                    intrestArr = self.intrestArr,
+                    intrestArrLength = intrestArr.length,
+                    doc = document,
+                    fragment = doc.createDocumentFragment(),
+                    delLength = intrestArrLength - 10;
                 for (var i = itemLength; i < intrestArrLength; i++) {
                     var li = doc.createElement('li');
                     li.innerHTML = intrestArr[i];

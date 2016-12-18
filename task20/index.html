@@ -114,8 +114,8 @@
     // minus the num
     function minusNum(target) {
         var numList = window.numList,
-                allLi = numList.childNodes,
-                length = allLi.length;
+            allLi = numList.childNodes,
+            length = allLi.length;
         if (!length) {
             return;
         }
@@ -131,7 +131,7 @@
 
     // validator the num
     function validatorInput() {
-        inputArr = txtInput.value.split(/\r|\n|,|，|、|\s/gm);
+        inputArr = txtInput.value.split(/[\r\n,，、\s]+/gm);
         return inputArr;
     }
 

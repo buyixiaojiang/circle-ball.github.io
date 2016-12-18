@@ -32,6 +32,7 @@ circle-ball的主页
     * 查找有关浏览器渲染，重排，重绘的问题
     
 ## task20
+* 正则表达式[]的使用
 
 ## task21
 * chilidNodes 可能包含注释节点
