@@ -39,3 +39,8 @@ circle-ball的主页
 * splice 删除数组指定项并且可插入项
 * 还缺第一次输入超过十个的时候的处理
 * Set Array.from等ES6语法实现数组去重
+
+## task22
+* 递归实现二叉树的遍历
+* firstElementChild、lastElementChild、previousElementSibling、nextElementSibling、childElementCount 只包含元素节点
+* firstChild、nextSibling、childNodes、children 通过它们遍历的时候，如果要获取元素节点，还要判断类型，因为还可能包含注释节点，文本节点
