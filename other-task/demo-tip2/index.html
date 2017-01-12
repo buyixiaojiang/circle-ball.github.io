@@ -8,6 +8,11 @@
     <link rel="stylesheet" href="components-default.css">
     <link rel="stylesheet" href="profile.css">
     <link rel="stylesheet" href="layer.default.css">
+    <style>
+        html, body {
+            height: 100%;
+        }
+    </style>
     <script src='https://cdn.staticfile.org/jquery/3.1.1/jquery.js'></script>
     <script src='layer.js'></script>
 </head>
@@ -25,7 +30,6 @@
             var $this = $(this);
             var type = $this.attr("data-type");
             var layerid = "";
-            var index = '';
             var common_opt = {
                 type    : 4,
                 area    : ['400px', 'auto'],
@@ -38,19 +42,26 @@
             //数据
             var data = {
                 "per_content": "<div class='text-center h108 bg-blue font-white' style='padding:20px 0'><h3>张先生</h3><ul class='list-inline'> <li><b>ID:</b>123456</li><li><i class='fa fa-phone'></i>413853856485</li><li><i class='fa fa-envelope-o' aria-hidden='true'></i>456798@163.com</li></ul><ul class='list-inline'><li><i class='fa fa-map-marker'></i>上东升济南市高新区留学人员创业园华能路19号</li><li><i class='fa fa-user-circle'></i>普通会员</li></ul></div><div class='portlet light ' style='margin-bottom:0;'><div class='row'><div class='col-md-4 col-sm-4'><div class='uppercase profile-stat-title'>37.00</div><div class='text-center font-blue' style='margin-top:10px;'> 资金余额/元</div></div><div class='col-md-4 col-sm-4'><div class='uppercase profile-stat-title'>25.00</div><div class='text-center font-blue' style='margin-top:10px;'> 幸运星余额/元</div></div><div class='col-md-4 col-sm-4'><div class='uppercase profile-stat-title'>2500.00</div><div class='text-center font-blue' style='margin-top:10px;'> 锁定余额/元</div></div></div></div>",
-                "com_content": "<div class='text-center h108 bg-blue font-white' style='padding:20px 0'><h3>讯都信息技术有限公司</h3><ul class='list-inline'> <li><b>ID:</b>123456</li><li><i class='fa fa-phone'></i>413853856485</li><li><i class='fa fa-envelope-o' aria-hidden='true'></i>456798@163.com</li></ul><ul class='list-inline'><li><i class='fa fa-map-marker'></i>上东升济南市高新区留学人员创业园华能路19号</li><li><i class='fa fa-user-circle'></i>普通会员</li></ul></div><div class='portlet light ' style='margin-bottom:0;'><div class='row'><div class='col-md-4 col-sm-4'><div class='uppercase profile-stat-title'>37.00</div><div class='text-center font-blue' style='margin-top:10px;'> 资金余额/元</div></div><div class='col-md-4 col-sm-4'><div class='uppercase profile-stat-title'>25.00</div><div class='text-center font-blue' style='margin-top:10px;'> 幸运星余额/元</div></div><div class='col-md-4 col-sm-4'><div class='uppercase profile-stat-title'>2500.00</div><div class='text-center font-blue' style='margin-top:10px;'> 锁定余额/元</div></div></div></div><div class='profile-usermenu' style='margin-top:0'> <ul class='nav' style='margin-bottom:10px;'> <li class='active'> <a href=''> <i class='fa fa-info'></i>企业信息</a> </li> </ul> <div> <div class='bg-grey-steel' style='padding:10px;margin:5px 0;'> <label class='font-blue'><b>联系人：</b></label><span style='float:right;color:#000;'>李祥生</span> </div> <div class='bg-grey-steel' style='padding:10px;margin:5px 0;'> <label class='font-blue'><b>固话：</b></label><span style='float:right;color:#000;'>13813813138</span> </div> <div class='bg-grey-steel' style='padding:10px;margin:5px 0;'> <label class='font-blue'><b>认证企业名称：</b></label><span style='float:right;color:#000;'>讯都信息技术有限公司</span> </div> <div class='bg-grey-steel' style='padding:10px;margin:5px 0;'> <label class='font-blue'><b>企业会员等级：</b></label><span style='float:right;color:#000;'>企业1级会员</span> </div> <div class='bg-grey-steel' style='padding:10px;margin:5px 0;'><label class='font-blue'><b>地图定位：</b></label><span style='float:right;'><a class='btn btn-primary btn-sm' target='_blank' href='http://c.xd.sour-lemon.com/support_util/bdmap-marker-html?lng=117.001319&lat=36.671627&name=%E5%8C%97%E4%BA%AC&zoom=18&global_name=marker_5W5T'>点击查看</a></span></div><div class='bg-grey-steel' style='padding:10px;margin:5px 0;'> <label class='font-blue'><b>审核状态：</b></label><span style='float:right;color:#000;'>已通过</span> </div> <div class='bg-grey-steel' style='padding:10px;margin:5px 0;'> <label class='font-blue'><b>二维码：</b></label><div class='text-right'><img src='http://img.1dailian.com/thumber/config/faker/so/22,c_fill,d_so,h_100,w_100.jpg' style='width:100px; height:100px' alt=''></div> </div> </div> </div>"
+                "com_content": "<div class='text-center h108 bg-blue font-white' style='padding:20px 0'><h3>信息技术有限公司</h3><ul class='list-inline'> <li><b>ID:</b>123456</li><li><i class='fa fa-phone'></i>413853856485</li><li><i class='fa fa-envelope-o' aria-hidden='true'></i>456798@163.com</li></ul><ul class='list-inline'><li><i class='fa fa-map-marker'></i>上东升济南市高新区留学人员创业园华能路19号</li><li><i class='fa fa-user-circle'></i>普通会员</li></ul></div><div class='portlet light ' style='margin-bottom:0;'><div class='row'><div class='col-md-4 col-sm-4'><div class='uppercase profile-stat-title'>37.00</div><div class='text-center font-blue' style='margin-top:10px;'> 资金余额/元</div></div><div class='col-md-4 col-sm-4'><div class='uppercase profile-stat-title'>25.00</div><div class='text-center font-blue' style='margin-top:10px;'> 幸运星余额/元</div></div><div class='col-md-4 col-sm-4'><div class='uppercase profile-stat-title'>2500.00</div><div class='text-center font-blue' style='margin-top:10px;'> 锁定余额/元</div></div></div></div><div class='profile-usermenu' style='margin-top:0'> <ul class='nav' style='margin-bottom:10px;'> <li class='active'> <a href=''> <i class='fa fa-info'></i>企业信息</a> </li> </ul> <div> <div class='bg-grey-steel' style='padding:10px;margin:5px 0;'> <label class='font-blue'><b>联系人：</b></label><span style='float:right;color:#000;'>李祥生</span> </div> <div class='bg-grey-steel' style='padding:10px;margin:5px 0;'> <label class='font-blue'><b>固话：</b></label><span style='float:right;color:#000;'>13813813138</span> </div> <div class='bg-grey-steel' style='padding:10px;margin:5px 0;'> <label class='font-blue'><b>认证企业名称：</b></label><span style='float:right;color:#000;'>信息技术有限公司</span> </div> <div class='bg-grey-steel' style='padding:10px;margin:5px 0;'> <label class='font-blue'><b>企业会员等级：</b></label><span style='float:right;color:#000;'>企业1级会员</span> </div> <div class='bg-grey-steel' style='padding:10px;margin:5px 0;'><label class='font-blue'><b>地图定位：</b></label><span style='float:right;'><a class='btn btn-primary btn-sm' target='_blank' href='http://c.xd.sour-lemon.com/support_util/bdmap-marker-html?lng=117.001319&lat=36.671627&name=%E5%8C%97%E4%BA%AC&zoom=18&global_name=marker_5W5T'>点击查看</a></span></div><div class='bg-grey-steel' style='padding:10px;margin:5px 0;'> <label class='font-blue'><b>审核状态：</b></label><span style='float:right;color:#000;'>已通过</span> </div> <div class='bg-grey-steel' style='padding:10px;margin:5px 0;'> <label class='font-blue'><b>二维码：</b></label><div class='text-right'><img src='http://img.1dailian.com/thumber/config/faker/so/22,c_fill,d_so,h_100,w_100.jpg' style='width:100px; height:100px' alt=''></div> </div> </div> </div>"
             };
 
             $this.addClass("J_infotip" + i);
             $this.on("mouseover", function () {
+                // 如果当前有弹框，则返回
+                if ( $('.layui-layer-tips').attr('times') && $('.layui-layer-tips').attr('times') == $(this).attr('data-times') ) {
+                    return;
+                }
                 var per_content = data.per_content; //html内容
                 var com_content = data.com_content; //html内容
                 var com_opt = {};
+                var $this = $(this);
                 if (type != "undefined" && type == "company") {
                     com_opt = $.extend({}, common_opt, {
                         content: [com_content, ".J_infotip" + i],
                         success: function (layero) {
                             layerid = layero[0].id;
+                            $this.addClass('active'); // 当前按钮增加一个标识
+                            $this.attr('data-times', $('.layui-layer-tips').attr('times')); // 当前按钮增加当前tip的id
                         }
                     });
                 }
@@ -59,11 +70,13 @@
                         content: [per_content, ".J_infotip" + i],
                         success: function (layero) {
                             layerid = layero[0].id;
+                            $this.addClass('active');
+                            $this.attr('data-times', $('.layui-layer-tips').attr('times'));
                         }
                     });
                 }
-                index = layer.open(com_opt);
-            }).on("mouseout", function () {
+                layer.open(com_opt);
+            })/*.on("mouseout", function () {
                 var count = 0;
                 $("#" + layerid).on('mouseover', function () {
                     count = 1;
@@ -84,8 +97,27 @@
                         count = 3;
                     }
                 }, 150);
-            })
-        })
+            })*/
+        });
+
+
+         var timeId = 0;
+        // 利用事件委托，移入——取消定时器，并充值timeId；移出——添加定时器
+         $("body").on('mouseleave', '.layui-layer-tips, .J_infotip.active', function() {
+             if (timeId) {
+                return console.log('return: ' + timeId);
+             }
+             timeId = setTimeout(function () {
+                 var index = $('.layui-layer-tips').attr('times');
+                 index && layer.close(index);
+                 $('.J_infotip').removeClass('active');
+                 console.log('create timeId: ' + timeId);
+             }, 300);
+         }).on('mouseenter', '.layui-layer-tips, .J_infotip.active', function() {
+             console.log('clearId: ' + timeId);
+             clearTimeout(timeId);
+             timeId = 0;
+         });
     }
     getinfoTip();
 </script>
